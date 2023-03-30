@@ -37,13 +37,47 @@ const createSupplier = async (req, res) => {
   }
 }
 
-
 // delete a supplier
+const deleteSupplier = async (req, res) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({error: 'No such supplier'})
+  }
+
+  const supplier = await Supplier.findOneAndDelete({_id: id})
+
+  if (!product) {
+    return res.status(404).json({error: 'No such supplier'})
+  }
+
+  res.status(200).json(supplier)
+
+}
 
 //update a supplier
+const updateSupplier = async (req, res) => {
+  const { id } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({error: 'No such supplier'})
+  }
+
+  const supplier = await Supplier.findOneAndUpdate({_id: id}, {
+    ...req.body
+  })
+
+  if (!supplier) {
+    return res.status(404).json({error: 'No such supplier'})
+  }
+
+  res.status(200).json(supplier)
+}
 
 module.exports = {
   getSuppliers,
   getSupplier,
-  createSupplier
+  createSupplier,
+  deleteSupplier,
+  updateSupplier
 }

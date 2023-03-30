@@ -2,7 +2,9 @@ const express = require('express')
 const {
   getSuppliers,
   getSupplier,
-  createSupplier
+  createSupplier,
+  deleteSupplier,
+  updateSupplier
 } = require('../controllers/supplierController')
 
 const router = express.Router()
@@ -17,14 +19,10 @@ router.get('/:id', getSupplier)
 router.post('/', createSupplier)
 
 // DELETE a supplier
-router.delete('/:id', (req, res) => {
-  res.json({msg: 'DELETE a supplier'})
-})
+router.delete('/:id', deleteSupplier)
 
 // UPDATE a supplier
-router.patch('/:id', (req, res) => {
-  res.json({msg: 'UPDATE a supplier'})
-})
+router.patch('/:id', updateSupplier)
 
 
 module.exports = router;
