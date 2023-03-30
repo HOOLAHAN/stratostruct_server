@@ -1,29 +1,20 @@
 const express = require('express')
-const Supplier = require('../models/supplierModel')
+const {
+  getSuppliers,
+  getSupplier,
+  createSupplier
+} = require('../controllers/supplierController')
 
 const router = express.Router()
 
 // GET all suppliers
-router.get('/', (req, res) => {
-  res.json({msg: 'GET all suppliers'})
-})
+router.get('/', getSuppliers)
 
 // GET a single supplier
-router.get('/:id', (req, res) => {
-  res.json({msg: 'GET a single supplier'})
-})
+router.get('/:id', getSupplier)
 
 // POST a new supplier
-router.post('/', async (req, res) => {
-  const { name, postcode, products } = req.body
-
-  try {
-    const supplier = await Supplier.create({ name, postcode, products})
-    res.status(200).json(supplier)
-  } catch (error) {
-    res.status(400).json({error: error.message})
-  }
-})
+router.post('/', createSupplier)
 
 // DELETE a supplier
 router.delete('/:id', (req, res) => {
