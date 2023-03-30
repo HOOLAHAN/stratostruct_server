@@ -1,4 +1,5 @@
 const express = require('express')
+const Supplier = require('../models/supplierModel')
 
 const router = express.Router()
 
@@ -13,8 +14,15 @@ router.get('/:id', (req, res) => {
 })
 
 // POST a new supplier
-router.post('/', (req, res) => {
-  res.json({msg: 'POST a new supplier'})
+router.post('/', async (req, res) => {
+  const { name, postcode, products } = req.body
+
+  try {
+    const supplier = await Supplier.create({ name, postcode, products})
+    res.status(200).json(supplier)
+  } catch (error) {
+    res.status(400).json({error: error.message})
+  }
 })
 
 // DELETE a supplier

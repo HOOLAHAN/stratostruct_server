@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express')
 const supplierRoutes = require('./routes/suppliers')
+const productRoutes = require('./routes/products')
 const mongoose = require('mongoose')
 
 // express app
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
 
 //routes
 app.use('/api/suppliers', supplierRoutes)
+app.use('/api/products', productRoutes)
 
 // connect to DB
 mongoose.connect(process.env.MONGO_URI)
