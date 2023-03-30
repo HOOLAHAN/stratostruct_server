@@ -1,3 +1,7 @@
+# dependencies
+/node_modules
+
+# misc
+.DS_Store
 .env
-DS_Store
-node_modules
+stratostruct_server.code-workspace
