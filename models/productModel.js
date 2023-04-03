@@ -4,11 +4,11 @@ const Schema = mongoose.Schema
 
 const productSchema = new Schema(
   {
-    "name": {
+    "component_type": {
       type: String,
       required: true
     },
-    "category": {
+    "component_name": {
       type: String,
       required: true
     }

@@ -26,11 +26,11 @@ const getProduct = async (req, res) => {
 
 // create new product
 const createProduct = async (req, res) => {
-  const { name, category } = req.body
+  const { component_type, component_name } = req.body
 
   // Add doc to db
   try {
-    const product = await Product.create({ name, category })
+    const product = await Product.create({ component_type, component_name })
     res.status(200).json(product)
   } catch (error) {
     res.status(400).json({error: error.message})
