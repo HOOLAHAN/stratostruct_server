@@ -28,6 +28,19 @@ const getProduct = async (req, res) => {
 const createProduct = async (req, res) => {
   const { component_type, component_name } = req.body
 
+  let emptyFields = []
+
+  if(!component_type) {
+    emptyFields.push('component_type')
+  }
+  if(!component_name) {
+    emptyFields.push('component_name')
+  }
+  if(emptyFields.length > 0) {
+    return res.status(400).json({error: 'Please fill in all the fields', emptyFields})
+  }
+
+
   // Add doc to db
   try {
     const product = await Product.create({ component_type, component_name })

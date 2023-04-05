@@ -28,6 +28,21 @@ const getSupplier = async (req, res) => {
 const createSupplier = async (req, res) => {
   const { name, postcode, products } = req.body
 
+  let emptyFields = []
+
+  if(!name) {
+    emptyFields.push('name')
+  }
+  if(!postcode) {
+    emptyFields.push('postcode')
+  }
+  if(!products) {
+    emptyFields.push('products')
+  }
+  if(emptyFields.length > 0) {
+    return res.status(400).json({error: 'Please fill in all the fields', emptyFields})
+  }
+
   // Add doc to db
   try {
     const supplier = await Supplier.create({ name, postcode, products })
