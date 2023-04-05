@@ -1,31 +1,28 @@
 const express = require('express')
+const {
+  getSuppliers,
+  getSupplier,
+  createSupplier,
+  deleteSupplier,
+  updateSupplier
+} = require('../controllers/supplierController')
 
 const router = express.Router()
 
 // GET all suppliers
-router.get('/', (req, res) => {
-  res.json({msg: 'GET all suppliers'})
-})
+router.get('/', getSuppliers)
 
 // GET a single supplier
-router.get('/:id', (req, res) => {
-  res.json({msg: 'GET a single supplier'})
-})
+router.get('/:id', getSupplier)
 
 // POST a new supplier
-router.post('/', (req, res) => {
-  res.json({msg: 'POST a new supplier'})
-})
+router.post('/', createSupplier)
 
 // DELETE a supplier
-router.delete('/:id', (req, res) => {
-  res.json({msg: 'DELETE a supplier'})
-})
+router.delete('/:id', deleteSupplier)
 
 // UPDATE a supplier
-router.patch('/:id', (req, res) => {
-  res.json({msg: 'UPDATE a supplier'})
-})
+router.patch('/:id', updateSupplier)
 
 
 module.exports = router;
