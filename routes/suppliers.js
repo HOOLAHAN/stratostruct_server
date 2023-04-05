@@ -7,7 +7,12 @@ const {
   updateSupplier
 } = require('../controllers/supplierController')
 
+const requireAuth = require('../middleware/requireAuth')
+
 const router = express.Router()
+
+// require auth for all supplier routes
+router.use(requireAuth)
 
 // GET all suppliers
 router.get('/', getSuppliers)
