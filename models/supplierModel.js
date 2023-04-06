@@ -12,14 +12,11 @@ const supplierSchema = new Schema(
       type: String,
       required: true
     },
-    "products": [ 
-        {
-          "product_id": {
-            type: String,
-            required: true
-          }
-        }
-     ]
+    "products": {
+      type: Array,
+      required: true
+    }
+
   }, { timestamps: true}
 )
 
