@@ -62,7 +62,7 @@ const deleteSupplier = async (req, res) => {
 
   const supplier = await Supplier.findOneAndDelete({_id: id})
 
-  if (!product) {
+  if (!supplier) {
     return res.status(404).json({error: 'No such supplier'})
   }
 
