@@ -7,6 +7,19 @@ const getSuppliers = async (req, res) => {
   res.status(200).json(suppliers)
 }
 
+// get suppliers by product id
+const getSuppliersByProductId = async (req, res) => {
+  try {
+    const productId = req.params.id // get the product id from the request parameter
+    
+    const suppliers = await Supplier.find({ "products._id": productId }); // find suppliers where the product id is in their products array
+
+    res.status(200).json(suppliers); // send the suppliers array as the response
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // get a single supplier
 const getSupplier = async (req, res) => {
   const { id } = req.params
@@ -94,5 +107,6 @@ module.exports = {
   getSupplier,
   createSupplier,
   deleteSupplier,
-  updateSupplier
+  updateSupplier,
+  getSuppliersByProductId
 }

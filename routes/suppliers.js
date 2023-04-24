@@ -4,7 +4,8 @@ const {
   getSupplier,
   createSupplier,
   deleteSupplier,
-  updateSupplier
+  updateSupplier,
+  getSuppliersByProductId
 } = require('../controllers/supplierController')
 
 const requireAuth = require('../middleware/requireAuth')
@@ -16,6 +17,9 @@ router.use(requireAuth)
 
 // GET all suppliers
 router.get('/', getSuppliers)
+
+// GET all suppliers of a product
+router.get('/product/:id', getSuppliersByProductId)
 
 // GET a single supplier
 router.get('/:id', getSupplier)
