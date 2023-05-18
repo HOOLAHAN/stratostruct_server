@@ -8,7 +8,8 @@ const {
   getSuppliersByProductId
 } = require('../controllers/supplierController')
 
-const {requireAuth, isAdmin} = require('../middleware/requireAuth')
+const requireAuth = require('../middleware/requireAuth')
+const isAdmin = require('../middleware/isAdmin')
 
 const router = express.Router()
 
