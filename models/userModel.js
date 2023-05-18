@@ -21,11 +21,15 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  role: {
+    type: String,
+    default: 'user',
   }
 }, { timestamps: true})
 
 // static signup method
-userSchema.statics.signup = async function(email, company, full_name, password) {
+userSchema.statics.signup = async function(email, company, full_name, password, role) {
 
   // validation
   if (!email || !company || !full_name || !password) {
@@ -47,7 +51,7 @@ userSchema.statics.signup = async function(email, company, full_name, password) 
   const salt = await bcrypt.genSalt(10)
   const hash = await bcrypt.hash(password, salt)
 
-  const user = await this.create({email, company, full_name, password: hash})
+  const user = await this.create({email, company, full_name, password: hash, role})
 
   return user
 }
@@ -69,9 +73,8 @@ userSchema.statics.login = async function(email, password) {
   if (!match) {
     throw Error('Incorrect password')
   }
-
+  console.log(user)
   return user
-
 }
 
 module.exports = mongoose.model('User', userSchema)

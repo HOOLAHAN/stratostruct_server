@@ -8,7 +8,7 @@ const {
   getSuppliersByProductId
 } = require('../controllers/supplierController')
 
-const requireAuth = require('../middleware/requireAuth')
+const {requireAuth, isAdmin} = require('../middleware/requireAuth')
 
 const router = express.Router()
 
@@ -16,22 +16,22 @@ const router = express.Router()
 router.use(requireAuth)
 
 // GET all suppliers
-router.get('/', getSuppliers)
+router.get('/', getSuppliers);
 
 // GET all suppliers of a product
-router.get('/product/:id', getSuppliersByProductId)
+router.get('/product/:id', getSuppliersByProductId);
 
 // GET a single supplier
-router.get('/:id', getSupplier)
+router.get('/:id', getSupplier);
 
 // POST a new supplier
-router.post('/', createSupplier)
+router.post('/', isAdmin, createSupplier);
 
 // DELETE a supplier
-router.delete('/:id', deleteSupplier)
+router.delete('/:id', isAdmin, deleteSupplier);
 
 // UPDATE a supplier
-router.patch('/:id', updateSupplier)
+router.patch('/:id', isAdmin, updateSupplier);
 
 
 module.exports = router;
