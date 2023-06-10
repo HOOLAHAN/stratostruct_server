@@ -33,6 +33,9 @@ jobs:
             ${{ secrets.EC2_PRIVATE_KEY }}
           port: ${{ secrets.EC2_PORT }}
 
+      - name: Print current working directory
+        run: pwd
+        
       - name: Change to repository directory
         run: cd /home/ec2-user/stratostruct_server
 
