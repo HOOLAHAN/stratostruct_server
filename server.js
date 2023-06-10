@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const supplierRoutes = require('./routes/suppliers')
 const productRoutes = require('./routes/products')
 const userRoutes = require('./routes/user')
+const cors = require('cors')
 
 // express app
 const app = express()
@@ -15,6 +16,9 @@ app.use((req, res, next) => {
   console.log(req.path, req.method)
   next()
 })
+
+// Enable CORS
+app.use(cors());
 
 //routes
 app.use('/api/suppliers', supplierRoutes)
