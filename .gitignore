@@ -5,3 +5,4 @@
 .DS_Store
 .env
 stratostruct_server.code-workspace
+StratoStructKeyPair.pem
