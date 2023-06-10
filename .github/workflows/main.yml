@@ -33,15 +33,16 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
 
       - name: Download or update repository
-        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ${{ secrets.EC2_PORT }} "cd /stratostruct_server && git pull"
+        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }} "cd ./stratostruct_server && git pull"
 
       - name: Set up environment variables
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_PORT }} "echo 'PORT=${{ secrets.PORT }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_PORT }} "echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_PORT }} "echo 'SECRET=${{ secrets.SECRET }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_PORT }} "echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> /home/ec2-user/stratostruct_server/.env"
+          echo 'PORT=${{ secrets.PORT }}' >> ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/.env
+          echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/.env
+          echo 'SECRET=${{ secrets.SECRET }}' >> ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/.env
+          echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/.env
 
       - name: Deploy to EC2 instance
         run: |
-          ssh -i {{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_PORT }} "cd /home/ec2-user/stratostruct_server && npm ci && npm start"
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }} "cd ./stratostruct_server && npm ci && npm start"
+
