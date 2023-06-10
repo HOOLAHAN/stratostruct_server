@@ -35,6 +35,7 @@ jobs:
 
       - name: Set up environment variables
         run: |
+          touch /home/ec2-user/stratostruct_server/.env
           echo "PORT=${{ secrets.PORT }}" >> /home/ec2-user/stratostruct_server/.env
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> /home/ec2-user/stratostruct_server/.env
           echo "SECRET=${{ secrets.SECRET }}" >> /home/ec2-user/stratostruct_server/.env
