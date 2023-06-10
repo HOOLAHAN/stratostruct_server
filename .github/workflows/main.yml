@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18'
+          node-version: '14'
 
       - name: Install dependencies
         run: npm ci
@@ -39,15 +39,11 @@ jobs:
 
       - name: Set up environment variables
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'export PORT=${{ secrets.PORT }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'export MONGO_URI=${{ secrets.MONGO_URI }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'export SECRET=${{ secrets.SECRET }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'export MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> /home/ec2-user/stratostruct_server/.env"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'PORT=${{ secrets.PORT }}' >> /home/ec2-user/stratostruct_server/.env"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> /home/ec2-user/stratostruct_server/.env"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'SECRET=${{ secrets.SECRET }}' >> /home/ec2-user/stratostruct_server/.env"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> /home/ec2-user/stratostruct_server/.env"
 
       - name: Deploy to EC2 instance
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && npm ci && pm2 restart backend && pm2 save"
-
-      - name: Start server
-        run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && pm2 start backend.js"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && npm ci && npm start"
