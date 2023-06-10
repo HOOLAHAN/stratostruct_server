@@ -27,17 +27,9 @@ jobs:
 
     steps:
       - name: Configure SSH
-        uses: appleboy/ssh-action@master
+        uses: webfactory/ssh-agent@v0.5.1
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: ${{ secrets.EC2_PORT }}
-          script: |
-            cd /home/ec2-user/stratostruct_server
-            git pull
-            npm ci
-            pm2 restart backend
+          ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
 
       - name: Set up environment variables
         run: |
@@ -45,3 +37,7 @@ jobs:
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> /home/ec2-user/stratostruct_server/.env
           echo "SECRET=${{ secrets.SECRET }}" >> /home/ec2-user/stratostruct_server/.env
           echo "MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}" >> /home/ec2-user/stratostruct_server/.env
+
+      - name: Deploy to EC2 instance
+        run: |
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && git pull && npm ci && pm2 restart backend"
