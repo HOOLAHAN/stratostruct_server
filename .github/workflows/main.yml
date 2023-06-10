@@ -33,7 +33,7 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
 
       - name: Download or update repository
-        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }} "cd ./stratostruct_server && git pull"
+        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }} "cd stratostruct_server && git pull"
 
       - name: Set up environment variables
         run: |
@@ -44,4 +44,4 @@ jobs:
 
       - name: Deploy to EC2 instance
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }} "cd ./stratostruct_server && npm ci && npm start"
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} -p ${{ secrets.EC2_PORT }} ec2-user@${{ secrets.EC2_HOST }} "cd stratostruct_server && npm ci && npm start"
