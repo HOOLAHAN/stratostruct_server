@@ -33,14 +33,15 @@ jobs:
             ${{ secrets.EC2_PRIVATE_KEY }}
           port: ${{ secrets.EC2_PORT }}
 
-      - name: Create directory and set up environment variables
+      - name: Download or update repository
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "mkdir -p /home/ec2-user/stratostruct_server && touch /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'PORT=${{ secrets.PORT }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'SECRET=${{ secrets.SECRET }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> /home/ec2-user/stratostruct_server/.env"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && git pull"
+
+      - name: Create or update environment variables file
+        run: |
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "mkdir -p /home/ec2-user/stratostruct_server && echo -e 'PORT=${{ secrets.PORT }}\nMONGO_URI=${{ secrets.MONGO_URI }}\nSECRET=${{ secrets.SECRET }}\nMAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' > /home/ec2-user/stratostruct_server/.env"
 
       - name: Deploy to EC2 instance
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && git pull && npm ci && pm2 restart backend && pm2 save"
+          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && npm ci && pm2 restart backend && pm2 save"
+
