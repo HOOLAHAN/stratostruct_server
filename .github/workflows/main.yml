@@ -33,7 +33,7 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
 
       - name: Download or update repository
-        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ${{ secrets.EC2_PORT }} "cd stratostruct_server && git pull"
+        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ${{ secrets.EC2_PORT }} "cd /stratostruct_server && git pull"
 
       - name: Set up environment variables
         run: |
