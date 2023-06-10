@@ -34,16 +34,17 @@ jobs:
           port: ${{ secrets.EC2_PORT }}
 
       - name: Download or update repository
-        run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && git pull"
+        run: git pull
 
       - name: Set up environment variables
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'PORT=${{ secrets.PORT }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'SECRET=${{ secrets.SECRET }}' >> /home/ec2-user/stratostruct_server/.env"
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> /home/ec2-user/stratostruct_server/.env"
+          echo "PORT=${{ secrets.PORT }}" >> /home/ec2-user/stratostruct_server/.env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> /home/ec2-user/stratostruct_server/.env
+          echo "SECRET=${{ secrets.SECRET }}" >> /home/ec2-user/stratostruct_server/.env
+          echo "MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}" >> /home/ec2-user/stratostruct_server/.env
 
       - name: Deploy to EC2 instance
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && npm ci && npm start"
+          cd /home/ec2-user/stratostruct_server
+          npm ci
+          npm start
