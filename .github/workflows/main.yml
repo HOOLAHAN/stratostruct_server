@@ -27,19 +27,17 @@ jobs:
 
     steps:
       - name: Configure SSH
-        uses: webfactory/ssh-agent@v0.5.1
+        uses: appleboy/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          
-      - name: Deploy to EC2 instance
-        run: |
-          ssh -i /tmp/ssh_agent_key ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} -p ${{ secrets.EC2_PORT }} << EOF
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          script: |
             cd /home/ec2-user/stratostruct_server
             git pull
             npm ci
             pm2 restart backend
-            exit
-          EOF
 
       - name: Set up environment variables
         run: |
