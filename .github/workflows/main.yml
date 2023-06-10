@@ -35,7 +35,7 @@ jobs:
 
       - name: Download or update repository
         run: |
-          ssh -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && git pull"
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.EC2_PORT }} ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "cd /home/ec2-user/stratostruct_server && git pull"
 
       - name: Set up environment variables
         run: |
