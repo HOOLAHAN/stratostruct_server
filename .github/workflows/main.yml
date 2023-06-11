@@ -20,11 +20,11 @@ jobs:
 
       - name: SSH into EC2 Instance and Set Environment Variables
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'PORT=${{ secrets.PORT }}' >> ~/stratostruct_server/.env"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> ~/stratostruct_server/.env"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'SECRET=${{ secrets.SECRET }}' >> ~/stratostruct_server/.env"
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> ~/stratostruct_server/.env"
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'PORT=${{ secrets.PORT }}' >> cd stratostruct_server/.env"
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'MONGO_URI=${{ secrets.MONGO_URI }}' >> cd stratostruct_server/.env"
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'SECRET=${{ secrets.SECRET }}' >> cd stratostruct_server/.env"
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} "echo 'MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}' >> cd stratostruct_server/.env"
 
       - name: SSH into EC2 Instance and Run Commands
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} 'cd ~/stratostruct_server && git pull && npm install && npm start'
+          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && git pull && npm install && npm start'
