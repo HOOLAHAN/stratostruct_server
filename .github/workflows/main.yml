@@ -26,4 +26,4 @@ jobs:
 
       - name: SSH into EC2 Instance and Run Commands
         run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && git pull && npm install && npm start'
+          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && git pull && npm install && npm start &'
