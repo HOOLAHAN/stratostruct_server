@@ -17,7 +17,6 @@ jobs:
         run: |
           echo "${{ secrets.EC2_PRIVATE_KEY }}" > key.pem
           chmod 600 key.pem
-
       - name: Create SSH directory
         run: mkdir -p /home/runner/.ssh
 
@@ -26,36 +25,4 @@ jobs:
 
       - name: SSH into EC2 Instance and Run Commands
         run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && git pull && npm install'
-
-  monitor:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Create PEM file
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > key.pem
-          chmod 600 key.pem
-
-      - name: Create SSH directory
-        run: mkdir -p /home/runner/.ssh
-
-      - name: Fetch host key
-        run: ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> /home/runner/.ssh/known_hosts
-
-      - name: SSH into EC2 Instance and Start Express server with PM2
-        run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && pm2 start -f server.js'
-
-      - name: SSH into EC2 Instance and Install PM2 logrotate
-        run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && pm2 install pm2-logrotate'
-
-      - name: SSH into EC2 Instance and Save PM2 process list
-        run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && pm2 save'
-
-
+          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && git pull && npm install &'
