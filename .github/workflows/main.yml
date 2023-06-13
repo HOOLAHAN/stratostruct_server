@@ -48,7 +48,7 @@ jobs:
 
       - name: SSH into EC2 Instance and Start Express server with PM2
         run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && pm2 start server.js'
+          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && pm2 start -f server.js'
 
       - name: SSH into EC2 Instance and Install PM2 logrotate
         run: |
@@ -57,4 +57,5 @@ jobs:
       - name: SSH into EC2 Instance and Save PM2 process list
         run: |
           ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && pm2 save'
+
 
