@@ -1,7 +1,7 @@
 const express = require('express');
 
 // controller functions
-const { signupUser, loginUser, autodeskAuth } = require('../controllers/userController');
+const { signupUser, loginUser } = require('../controllers/userController');
 const requireAuth = require('../middleware/requireAuth');
 const isAdmin = require('../middleware/isAdmin');
 
@@ -18,8 +18,5 @@ router.get('/admin', requireAuth, isAdmin, (req, res) => {
   // This route is only accessible to administrators
   res.json({ message: 'Welcome to the admin page!' });
 });
-
-// Autodesk auth route
-router.get('/autodesk-auth', autodeskAuth);
 
 module.exports = router;
