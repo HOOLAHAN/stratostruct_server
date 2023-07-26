@@ -102,23 +102,33 @@ const getBucketDetails = async (req, res) => {
   }
 };
 
+// Axios instance for Forge API
+const forgeAPI = axios.create({
+  baseURL: 'https://developer.api.autodesk.com',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
+// Function to upload IFC file
 const uploadIFCFile = async (req, res) => {
   try {
-    const IFCFile = req.file; // This should come from the request's file data
-    const accessToken = await getForgeAccessToken(); // Acquiring access token
+    const IFCFile = req.file;
+    const bucketKey = req.params.bucketKey;
+    const accessToken = await getForgeAccessToken();
 
-    const url = `https://developer.api.autodesk.com/oss/v2/buckets/${process.env.FORGE_BUCKET_KEY}/objects/${IFCFile.originalname}`;
+    const url = `/oss/v2/buckets/${bucketKey}/objects/${IFCFile.originalname}`;
 
     const headers = {
       Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/octet-stream',
     };
 
-    const response = await axios.put(url, IFCFile.buffer, { headers });
+    const response = await forgeAPI.put(url, IFCFile.buffer, { headers });
 
-    res.status(200).json({ objectId: response.data.objectId }); // Sending response back to client
+    res.status(200).json({ objectId: response.data.objectId });
   } catch (error) {
+    console.error('Error in uploadIFCFile:', error);
     res.status(500).json({ error: 'Failed to upload IFC file.' });
   }
 };

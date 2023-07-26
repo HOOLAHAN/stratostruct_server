@@ -23,6 +23,6 @@ router.get('/bucket/:bucketKey', getBucketDetails);
 router.get('/forge-access-token', getForgeAccessToken);
 
 // POST upload an IFC model
-router.post('/uploadIFC', upload.single('file'), uploadIFCFile)
+router.post('/uploadIFC/:bucketKey', upload.single('file'), uploadIFCFile)
 
 module.exports = router;
