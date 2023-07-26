@@ -30,4 +30,4 @@ jobs:
 
       - name: SSH into EC2 Instance and Start Server
         run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && PORT=${{ secrets.PORT }} MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }} MONGO_URI=${{ secrets.MONGO_URI }} AUTODESK_CLIENT_ID=${{ secrets.AUTODESK_CLIENT_ID }} AUTODESK_CLIENT_SECRET=${{ secrets.AUTODESK_CLIENT_SECRET }} npm start'
+          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && PORT=${{ secrets.PORT }} MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }} MONGO_URI=${{ secrets.MONGO_URI }} AUTODESK_CLIENT_ID=${{ secrets.AUTODESK_CLIENT_ID }} AUTODESK_CLIENT_SECRET=${{ secrets.AUTODESK_CLIENT_SECRET }} && npm start'    
