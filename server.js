@@ -29,12 +29,15 @@ app.use('/api/user', userRoutes)
 app.use('/api/mapbox', mapboxRoutes)
 app.use('/api/autodesk', autodeskRoutes)
 
+// use environment variable as port or fallback on 4000
+const port = process.env.PORT || 4000;
+
 // connect to DB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     // listen for requests
-    app.listen(process.env.PORT, () => {
-      console.log('connected to DB & listening on port', process.env.PORT)
+    app.listen(port, () => {
+      console.log('connected to DB & listening on port', port)
     })
   })
   .catch((error) => {
