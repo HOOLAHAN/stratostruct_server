@@ -6,3 +6,5 @@
 .env
 stratostruct_server.code-workspace
 StratoStructKeyPair.pem
+.eslintrc.js
+.vs/
