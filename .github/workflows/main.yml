@@ -28,10 +28,6 @@ jobs:
         run: |
           ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && git pull && npm install'
 
-      - name: Kill Process on Port 4000
-        run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo kill $(sudo lsof -t -i:4000)'
-
       - name: SSH into EC2 Instance and Set Environment Variables and Start Server
         run: |
-          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && PORT=${{ secrets.PORT }} MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }} MONGO_URI=${{ secrets.MONGO_URI }} AUTODESK_CLIENT_ID=${{ secrets.AUTODESK_CLIENT_ID }} AUTODESK_CLIENT_SECRET=${{ secrets.AUTODESK_CLIENT_SECRET }} npm start &'
+          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'cd stratostruct_server && export PORT=${{ secrets.PORT }} && export MAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }} && export MONGO_URI=${{ secrets.MONGO_URI }} && export AUTODESK_CLIENT_ID=${{ secrets.AUTODESK_CLIENT_ID }} && export AUTODESK_CLIENT_SECRET=${{ secrets.AUTODESK_CLIENT_SECRET }} && nohup npm start > output.log 2>&1 &'
