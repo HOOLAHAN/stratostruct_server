@@ -23,7 +23,7 @@ const getDistance = async (req, res) => {
 
     const drivingDistanceData = await axios.get(url);
     const distanceInMeters = drivingDistanceData.data.routes[0].distance;
-    const distanceInKilometers = (distanceInMeters / 1000).toFixed(2);
+    const distanceInKilometers = Math.round(distanceInMeters / 1000);
 
     res.json({ distance: distanceInKilometers });
   } catch (error) {
