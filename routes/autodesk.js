@@ -1,6 +1,6 @@
 const express = require('express')
 const { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile } = require('../controllers/autodeskController');
-// const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require('../middleware/requireAuth')
 const router = express.Router()
 const multer = require('multer');
 
@@ -8,7 +8,7 @@ const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
 // require auth for all product routes
-// router.use(requireAuth)
+router.use(requireAuth)
 
 // create bucket route
 router.post('/create-bucket', createBucket);
