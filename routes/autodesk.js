@@ -16,9 +16,6 @@ router.post('/create-bucket', createBucket);
 // get bucket details route
 router.get('/bucket/:bucketKey', getBucketDetails);
 
-// Autodesk auth route
-// router.get('/autodesk-auth', autodeskAuth);
-
 // get Forge Access Token
 router.get('/forge-access-token', getForgeAccessToken);
 
