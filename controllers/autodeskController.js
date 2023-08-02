@@ -1,15 +1,10 @@
 const axios = require('axios');
 const base64 = require('base-64');
 const forgeSDK = require('forge-apis');
-const multer = require('multer');
 require('dotenv').config()
 
-// Multer configuration for handling file uploads
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
 // Function to get an access token from Forge
-const getForgeAccessToken = async () => {
+const getForgeAccessToken = async (req, res) => {
   try {
     const CLIENT_ID = process.env.AUTODESK_CLIENT_ID;
     const CLIENT_SECRET = process.env.AUTODESK_CLIENT_SECRET;
@@ -31,12 +26,12 @@ const getForgeAccessToken = async () => {
     const response = await axios.post(tokenUrl, requestBody, { headers });
 
     const access_token = response.data.access_token;
-
-    return access_token;
+    console.log(`Forge access token: ${access_token}`)
+    res.json({ data: access_token });
 
   } catch (error) {
     console.error('Authentication error:', error.message);
-    throw error;
+    res.status(500).json({ error: 'Failed to get access token.' });
   }
 };
 
@@ -115,7 +110,11 @@ const uploadIFCFile = async (req, res) => {
   try {
     const IFCFile = req.file;
     const bucketKey = req.params.bucketKey;
-    const accessToken = await getForgeAccessToken();
+    
+    // Set the credentials for the Forge SDK
+    const forgeOAuth = new forgeSDK.AuthClientTwoLegged(process.env.AUTODESK_CLIENT_ID, process.env.AUTODESK_CLIENT_SECRET, ['bucket:create', 'data:read', 'data:write'], false);
+    const forgeCredentials = await forgeOAuth.authenticate();
+    const accessToken = forgeCredentials.access_token;
 
     const url = `/oss/v2/buckets/${bucketKey}/objects/${IFCFile.originalname}`;
 
@@ -132,5 +131,7 @@ const uploadIFCFile = async (req, res) => {
     res.status(500).json({ error: 'Failed to upload IFC file.' });
   }
 };
+
+
 
 module.exports = { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile };
