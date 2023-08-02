@@ -172,9 +172,9 @@ const translateFile = async (req, res) => {
     const response = await axios.post('https://developer.api.autodesk.com/modelderivative/v2/designdata/job', data, config);
     res.json(response.data);
   } catch (error) {
-    console.error('Error in translate-file:', error);
+    console.error('Error from Forge API:', error.response ? error.response.data : error.message);
     res.status(500).json({ error: 'An error occurred while translating the file.' });
-  }
+  }  
 };
 
 // Function to check the status of the translation job
