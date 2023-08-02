@@ -11,7 +11,7 @@ const getForgeAccessToken = async (req, res) => {
     const BASE64_ENCODED_STRING = base64.encode(`${CLIENT_ID}:${CLIENT_SECRET}`);
 
     const tokenUrl = 'https://developer.api.autodesk.com/authentication/v2/token';
-    const scope = 'bucket:create bucket:read data:read data:write';
+    const scope = 'bucket:create bucket:read data:read data:write viewables:read';
 
     const requestBody = new URLSearchParams();
     requestBody.append('grant_type', 'client_credentials');
