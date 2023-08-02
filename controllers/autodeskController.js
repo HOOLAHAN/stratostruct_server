@@ -125,13 +125,79 @@ const uploadIFCFile = async (req, res) => {
 
     const response = await forgeAPI.put(url, IFCFile.buffer, { headers });
 
-    res.status(200).json({ objectId: response.data.objectId });
+    // Store root file name (original file name without extension)
+    const rootFileName = IFCFile.originalname.split('.').slice(0, -1).join('.');
+    req.rootFileName = rootFileName;
+
+    res.status(200).json({ objectId: response.data.objectId, fileName: IFCFile.originalname });
   } catch (error) {
     console.error('Error in uploadIFCFile:', error);
     res.status(500).json({ error: 'Failed to upload IFC file.' });
   }
 };
 
+// Function to translate file
+const translateFile = async (req, res) => {
+  const urn = req.body.urn;
+  const rootFileName = req.body.fileName;
+  
+  // Set the credentials for the Forge SDK
+  const forgeOAuth = new forgeSDK.AuthClientTwoLegged(process.env.AUTODESK_CLIENT_ID, process.env.AUTODESK_CLIENT_SECRET, ['data:read', 'data:write', 'data:create', 'data:search'], false);
+  const forgeCredentials = await forgeOAuth.authenticate();
+  const accessToken = forgeCredentials.access_token;
 
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    }
+  };
 
-module.exports = { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile };
+  const data = {
+    input: {
+      urn,
+    },
+    output: {
+      formats: [
+        {
+          type: 'svf',
+          views: ['2d', '3d'],
+        },
+      ],
+    },
+    rootFileName: rootFileName,
+  };
+
+  try {
+    const response = await axios.post('https://developer.api.autodesk.com/modelderivative/v2/designdata/job', data, config);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error in translate-file:', error);
+    res.status(500).json({ error: 'An error occurred while translating the file.' });
+  }
+};
+
+// Function to check the status of the translation job
+const checkTranslationStatus = async (req, res) => {
+  try {
+    const urn = req.params.urn; // Get the urn from the request parameters
+
+    // Set the credentials for the Forge SDK
+    const forgeOAuth = new forgeSDK.AuthClientTwoLegged(process.env.AUTODESK_CLIENT_ID, process.env.AUTODESK_CLIENT_SECRET, ['data:read', 'data:write', 'data:create', 'data:search'], false);
+    const forgeCredentials = await forgeOAuth.authenticate();
+
+    // Create a new Derivatives API object
+    const derivativesApi = new forgeSDK.DerivativesApi();
+
+    // Get the translation job status
+    const job = await derivativesApi.getManifest(urn, {}, forgeOAuth, forgeCredentials);
+
+    // Respond with the job status
+    res.json(job.body.status);
+  } catch (error) {
+    console.error('Error checking translation status:', error);
+    res.status(500).json({ error: 'An error occurred while checking the translation status.' });
+  }
+};
+
+module.exports = { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile, translateFile, checkTranslationStatus };
