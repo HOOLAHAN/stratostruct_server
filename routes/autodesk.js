@@ -1,11 +1,23 @@
 const express = require('express')
-const { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile, translateFile, checkTranslationStatus } = require('../controllers/autodeskController');
+const { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile, translateFile, checkTranslationStatus, getBucketObjects, getUrn } = require('../controllers/autodeskController');
 const requireAuth = require('../middleware/requireAuth')
 const router = express.Router()
 const multer = require('multer');
 
 // Multer instance for file handling
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: function (req, file, cb) {
+    if (!file.originalname.match(/\.(ifc)$/)) {
+      return cb(new Error('Only IFC files are allowed!'));
+    }
+    cb(null, true);
+  },
+  onError : function(err, next) {
+    console.log('error', err);
+    next(err);
+  }
+});
 
 // require auth for all product routes
 router.use(requireAuth)
@@ -27,5 +39,11 @@ router.post('/translate-file', translateFile)
 
 // Check translation status
 router.get('/check-translation-status/:urn', checkTranslationStatus);
+
+// Get the objects in a bucket
+router.get('/bucket/:bucketKey/objects', getBucketObjects);
+
+// Get the URN
+router.get('/getURN/:bucketKey', getUrn);
 
 module.exports = router;

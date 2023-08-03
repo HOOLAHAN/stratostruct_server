@@ -107,6 +107,7 @@ const forgeAPI = axios.create({
 
 // Function to upload IFC file
 const uploadIFCFile = async (req, res) => {
+  console.log(req.file)
   try {
     const IFCFile = req.file;
     const bucketKey = req.params.bucketKey;
@@ -200,4 +201,72 @@ const checkTranslationStatus = async (req, res) => {
   }
 };
 
-module.exports = { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile, translateFile, checkTranslationStatus };
+const getBucketObjects = async (req, res) => {
+  try {
+    const bucketKey = req.params.bucketKey; // Use the bucket key from the request parameters
+
+    // Get the access token
+    const forgeOAuth = new forgeSDK.AuthClientTwoLegged(process.env.AUTODESK_CLIENT_ID, process.env.AUTODESK_CLIENT_SECRET, ['bucket:create', 'bucket:read', 'data:read', 'data:write'], false);
+    const forgeCredentials = await forgeOAuth.authenticate();
+    const accessToken = forgeCredentials.access_token;
+
+    // Create the URL for the GET request
+    const url = `https://developer.api.autodesk.com/oss/v2/buckets/${bucketKey}/objects`;
+
+    // Define the headers for the GET request
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    // Make the GET request to get the objects in the bucket
+    const response = await axios.get(url, { headers });
+
+    // Check if the response indicates success
+    if (response.status === 200) {
+      res.json(response.data);
+    } else {
+      throw new Error('Error getting bucket objects');
+    }
+
+  } catch (error) {
+    console.error(error.response.data);
+    res.status(500).json({ error: 'Failed to get bucket objects.' });
+  }
+};
+
+const getUrn = async (req, res) => {
+  try {
+    const bucketKey = req.params.bucketKey;
+
+    // Get the access token
+    const forgeOAuth = new forgeSDK.AuthClientTwoLegged(process.env.AUTODESK_CLIENT_ID, process.env.AUTODESK_CLIENT_SECRET, ['bucket:create', 'bucket:read', 'data:read', 'data:write'], false);
+    const forgeCredentials = await forgeOAuth.authenticate();
+    const accessToken = forgeCredentials.access_token;
+
+    // Create the URL for the GET request
+    const url = `https://developer.api.autodesk.com/oss/v2/buckets/${bucketKey}/objects`;
+
+    // Define the headers for the GET request
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    // Make the GET request to get the objects in the bucket
+    const response = await axios.get(url, { headers });
+
+    // Check if the response indicates success
+    if (response.status === 200) {
+      const urns = response.data.items.map(item => item.objectId); // This will be an array of URNs
+      res.json(urns);
+    } else {
+      throw new Error('Error getting URN');
+    }
+
+  } catch (error) {
+    console.error(error.response.data);
+    res.status(500).json({ error: 'Failed to get URN.' });
+  }
+};
+
+
+module.exports = { createBucket, getBucketDetails, getForgeAccessToken, uploadIFCFile, translateFile, checkTranslationStatus, getBucketObjects, getUrn };
