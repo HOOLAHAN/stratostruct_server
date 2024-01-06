@@ -58,7 +58,20 @@ const getRoute = async (req, res) => {
   }
 };
 
+const getMapTiles = async (req, res) => {
+  try {
+    const tileUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/${req.params.z}/${req.params.x}/${req.params.y}?access_token=${process.env.MAPBOX_API_KEY}`;
+    const response = await axios.get(tileUrl, { responseType: 'arraybuffer' });
+    res.set('Content-Type', 'image/png');
+    res.send(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching map tiles');
+  }
+};
+
 module.exports = {
   getDistance,
-  getRoute
+  getRoute,
+  getMapTiles
 }
