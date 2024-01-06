@@ -32,6 +32,31 @@ const getDistance = async (req, res) => {
   }
 };
 
+// function to fetch the driving route
+const getRoute = async (req, res) => {
+  try {
+    const { startPostcode, endPostcode } = req.body;
+
+    // Convert postcodes to geocoordinates using Mapbox Geocoding API
+    const geoCodeUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+    const startGeo = await axios.get(`${geoCodeUrl}${encodeURIComponent(startPostcode)}.json?access_token=${process.env.MAPBOX_API_KEY}`);
+    const endGeo = await axios.get(`${geoCodeUrl}${encodeURIComponent(endPostcode)}.json?access_token=${process.env.MAPBOX_API_KEY}`);
+
+    const startCoordinates = startGeo.data.features[0].center;
+    const endCoordinates = endGeo.data.features[0].center;
+
+    // Get directions using Mapbox Directions API
+    const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?access_token=${process.env.MAPBOX_API_KEY}`;
+    const routeResponse = await axios.get(directionsUrl);
+
+    res.json(routeResponse.data.routes[0]);
+  } catch (error) {
+    console.error('Error getting route: ', error);
+    res.status(500).send('Error getting route');
+  }
+};
+
 module.exports = {
-  getDistance
+  getDistance,
+  getRoute
 }

@@ -1,6 +1,7 @@
 const express = require('express')
 const {
-  getDistance
+  getDistance,
+  getRoute
 } = require('../controllers/mapboxController')
 
 const requireAuth = require('../middleware/requireAuth')
@@ -12,5 +13,8 @@ router.use(requireAuth)
 
 // GET distance from mapbox API
 router.get('/getDistance', getDistance)
+
+// POST route from mapbox API
+router.post('/getRoute', getRoute)
 
 module.exports = router;
