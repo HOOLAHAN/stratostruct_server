@@ -45,11 +45,13 @@ const getRoute = async (req, res) => {
     const startCoordinates = startGeo.data.features[0].center;
     const endCoordinates = endGeo.data.features[0].center;
 
-    // Get directions using Mapbox Directions API
-    const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?access_token=${process.env.MAPBOX_API_KEY}`;
+    // Fetch route from Mapbox Directions API
+    const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?geometries=geojson&access_token=${process.env.MAPBOX_API_KEY}`;
     const routeResponse = await axios.get(directionsUrl);
+    const routeData = routeResponse.data.routes[0].geometry;
 
-    res.json(routeResponse.data.routes[0]);
+    // Send back only the necessary data to the front end
+    res.json({ routeData });
   } catch (error) {
     console.error('Error getting route: ', error);
     res.status(500).send('Error getting route');
