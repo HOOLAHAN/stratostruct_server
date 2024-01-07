@@ -102,11 +102,49 @@ const updateSupplier = async (req, res) => {
   res.status(200).json(supplier)
 }
 
+// suppliersOfProducts function
+const suppliersOfProducts = async (req, res) => {
+  try {
+      const productIds = req.body.productIds;
+
+      if (!productIds || !Array.isArray(productIds)) {
+          return res.status(400).json({ error: "Invalid input. Expecting an array of product IDs." });
+      }
+
+      // Log the received product IDs
+      console.log("Received product IDs:", productIds);
+
+      const suppliersForProducts = await Supplier.aggregate([
+        { $unwind: "$products" },
+        { $match: { "products._id": { $in: productIds } } },
+        { $group: {
+            _id: "$products._id",
+            component_type: { $first: "$products.component_type" },
+            component_name: { $first: "$products.component_name" },
+            suppliers: { $push: { 
+                _id: "$_id",
+                name: "$name",
+                postcode: "$postcode"
+            }}
+        }}
+    ]);
+
+      // Log the result of the aggregation
+      console.log("Aggregation result:", suppliersForProducts);
+
+      res.status(200).json(suppliersForProducts);
+  } catch (error) {
+      console.error("Error in suppliersOfProducts:", error);
+      res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getSuppliers,
   getSupplier,
   createSupplier,
   deleteSupplier,
   updateSupplier,
-  getSuppliersByProductId
+  getSuppliersByProductId,
+  suppliersOfProducts
 }

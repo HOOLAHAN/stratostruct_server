@@ -5,7 +5,8 @@ const {
   createSupplier,
   deleteSupplier,
   updateSupplier,
-  getSuppliersByProductId
+  getSuppliersByProductId,
+  suppliersOfProducts
 } = require('../controllers/supplierController')
 
 const requireAuth = require('../middleware/requireAuth')
@@ -34,5 +35,7 @@ router.delete('/:id', isAdmin, deleteSupplier);
 // UPDATE a supplier
 router.patch('/:id', isAdmin, updateSupplier);
 
+// POST a list of product ids to get a list of suppliers
+router.post('/suppliers-by-products', suppliersOfProducts);
 
 module.exports = router;
