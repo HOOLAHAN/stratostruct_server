@@ -2,7 +2,8 @@ const express = require('express')
 const {
   getDistance,
   getRoute,
-  getMapTiles
+  getMapTiles,
+  getCoordinatesFromPostcode
 } = require('../controllers/mapboxController')
 
 const requireAuth = require('../middleware/requireAuth')
@@ -20,5 +21,9 @@ router.post('/getRoute', getRoute)
 
 // GET map tiles
 router.get('/styles/v1/mapbox/streets-v11/tiles/256/:z/:x/:y', getMapTiles);
+
+// GET coordinates from postcode
+router.get('/getCoordinates', getCoordinatesFromPostcode);
+
 
 module.exports = router;

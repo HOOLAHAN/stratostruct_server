@@ -70,8 +70,25 @@ const getMapTiles = async (req, res) => {
   }
 };
 
+// Function to fetch coordinates from a postcode
+const getCoordinatesFromPostcode = async (req, res) => {
+  try {
+    const { postcode } = req.query;
+    const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(postcode)}.json?access_token=${process.env.MAPBOX_API_KEY}`;
+
+    const response = await axios.get(geocodingUrl);
+    const coordinates = response.data.features[0].center;
+
+    res.json({ coordinates });
+  } catch (error) {
+    console.error('Error getting coordinates: ', error);
+    res.status(500).send('Error getting coordinates');
+  }
+};
+
 module.exports = {
   getDistance,
   getRoute,
-  getMapTiles
+  getMapTiles,
+  getCoordinatesFromPostcode
 }
