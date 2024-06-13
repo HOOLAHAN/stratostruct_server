@@ -24,10 +24,15 @@ jobs:
       - name: Fetch host key
         run: ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> /home/runner/.ssh/known_hosts
 
+      - name: Create Certificate Files
+        run: |
+          echo "${{ secrets.SSL_KEY }}" > server.key
+          echo "${{ secrets.SSL_CERT }}" > server.cert
+
       - name: SSH into EC2 Instance and Deploy Application
         run: |
-          scp -i key.pem -o StrictHostKeyChecking=no ./certs/server.key ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/certs/
-          scp -i key.pem -o StrictHostKeyChecking=no ./certs/server.cert ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/certs/
+          scp -i key.pem -o StrictHostKeyChecking=no server.key ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/certs/
+          scp -i key.pem -o StrictHostKeyChecking=no server.cert ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/certs/
           ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             sudo fuser -k 4000/tcp
             cd stratostruct_server
