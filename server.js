@@ -8,6 +8,14 @@ const userRoutes = require('./routes/user')
 const mapboxRoutes = require('./routes/mapbox')
 const autodeskRoutes = require('./routes/autodesk')
 const cors = require('cors')
+const fs = require('fs')
+const https = require('https')
+
+// Load SSL certificate and key
+const privateKey = fs.readFileSync('./certs/server.key', 'utf8')
+const certificate = fs.readFileSync('./certs/server.cert', 'utf8')
+
+const credentials = { key: privateKey, cert: certificate }
 
 // express app
 const app = express()
@@ -20,9 +28,9 @@ app.use((req, res, next) => {
 })
 
 // Enable CORS
-app.use(cors());
+app.use(cors())
 
-//routes
+// routes
 app.use('/api/suppliers', supplierRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/user', userRoutes)
@@ -30,13 +38,13 @@ app.use('/api/mapbox', mapboxRoutes)
 app.use('/api/autodesk', autodeskRoutes)
 
 // use environment variable as port or fallback on 4000
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4000
 
 // connect to DB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    // listen for requests
-    app.listen(port, () => {
+    // listen for requests on HTTPS
+    https.createServer(credentials, app).listen(port, () => {
       console.log('connected to DB & listening on port', port)
     })
   })

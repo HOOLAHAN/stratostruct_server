@@ -8,3 +8,7 @@ stratostruct_server.code-workspace
 StratoStructKeyPair.pem
 .eslintrc.js
 .vs/
+
+# SSL certificates
+certs/server.key
+certs/server.cert
