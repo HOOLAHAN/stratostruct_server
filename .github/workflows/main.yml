@@ -29,10 +29,19 @@ jobs:
           echo "${{ secrets.SSL_KEY }}" > server.key
           echo "${{ secrets.SSL_CERT }}" > server.cert
 
-      - name: SSH into EC2 Instance and Deploy Application
+      - name: SSH into EC2 Instance and Prepare Environment
+        run: |
+          ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            mkdir -p /home/ec2-user/stratostruct_server/certs/
+          EOF
+
+      - name: Transfer Certificate Files
         run: |
           scp -i key.pem -o StrictHostKeyChecking=no server.key ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/certs/
           scp -i key.pem -o StrictHostKeyChecking=no server.cert ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/stratostruct_server/certs/
+
+      - name: SSH into EC2 Instance and Deploy Application
+        run: |
           ssh -i key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             sudo fuser -k 4000/tcp
             cd stratostruct_server
@@ -41,3 +50,8 @@ jobs:
             echo -e "PORT=${{ secrets.PORT }}\nMAPBOX_API_KEY=${{ secrets.MAPBOX_API_KEY }}\nMONGO_URI=${{ secrets.MONGO_URI }}\nAUTODESK_CLIENT_ID=${{ secrets.AUTODESK_CLIENT_ID }}\nAUTODESK_CLIENT_SECRET=${{ secrets.AUTODESK_CLIENT_SECRET }}" > .env
             pm2 restart all || pm2 start npm -- start
           EOF
+
+      - name: Clean up Certificate Files
+        run: |
+          rm server.key
+          rm server.cert
