@@ -12,20 +12,26 @@ const fs = require('fs')
 const https = require('https')
 
 // Load SSL certificate and key
-const privateKey = fs.readFileSync('./certs/server.key', 'utf8')
-const certificate = fs.readFileSync('./certs/server.cert', 'utf8')
+const privateKey = fs.readFileSync('/home/ec2-user/stratostruct_server/certs/server.key', 'utf8');
+const certificate = fs.readFileSync('/home/ec2-user/stratostruct_server/certs/server.cert', 'utf8');
 
-const credentials = { key: privateKey, cert: certificate }
+const credentials = { key: privateKey, cert: certificate };
 
 // express app
-const app = express()
+const app = express();
 
 // middleware
-app.use(express.json())
+app.use(express.json());
+app.use(cors({
+  origin: 'https://www.stratostruct.com',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
+
 app.use((req, res, next) => {
-  console.log(req.path, req.method)
-  next()
-})
+  console.log(req.path, req.method);
+  next();
+});
 
 // Enable CORS
 app.use(cors())
