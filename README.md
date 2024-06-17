@@ -1,6 +1,8 @@
-# StratoStruct Backend Server
+# StratoStruct Backend Server (Legacy)
 
-Welcome to the StratoStruct Backend Server repository, the backbone of the StratoStruct web application. StratoStruct is engineered using the robust MERN stack (MongoDB, Express.js, React, Node.js), designed to provide a platform for managing and analysing the supply chain for offsite manufacturing of construction components. This server is deployed on an AWS EC2 instance, ensuring scalable and reliable access for users.
+Welcome to the legacy repository of the StratoStruct Backend Server, the backbone of the StratoStruct web application. StratoStruct is engineered using the robust MERN stack (MongoDB, Express.js, React, Node.js), designed to provide a platform for managing and analysing the supply chain for offsite manufacturing of construction components. This server was deployed on an AWS EC2 instance.
+
+**Please Note:** This is the repository for the old server. For the latest version of the StratoStruct backend server, which uses the Serverless Framework and is deployed on AWS Lambda, please visit the new repository: [StratoStruct Lambda](https://github.com/HOOLAHAN/stratostruct-lambda)
 
 ## Overview
 
@@ -64,4 +66,4 @@ We welcome contributions from the community! If you'd like to contribute, please
 
 Should you encounter any issues or have questions regarding the StratoStruct backend server, please do not hesitate to reach out to us. You can file an issue through the GitHub issue tracker or contact the maintainers directly via email.
 
-Thank you for exploring the StratoStruct backend server.
+Thank you for exploring the legacy StratoStruct backend server. For the latest version, visit the [StratoStruct Lambda](https://github.com/HOOLAHAN/stratostruct-lambda) repository.
